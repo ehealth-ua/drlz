@@ -44,10 +44,7 @@ defmodule DRLZ do
                       :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
                  _ -> Logger.debug("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: N/A")
                  end end)
-                 case restart == pgs do
-                      true -> :file.delete(dow)
-                      false -> :skip
-                 end
+                 :file.delete(dow)
       end
   end
 
