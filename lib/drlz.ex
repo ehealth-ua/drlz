@@ -26,7 +26,10 @@ defmodule DRLZ do
   def sync_table(folder, api, name, win \\ @page_bulk) do
       restart = case :file.read_file("priv/#{folder}/#{name}.dow") do
          {:ok, bin} -> :erlang.binary_to_integer(bin) + 1
-         {:error, _} -> 1
+         {:error, _} -> case :file.read_file("priv/#{folder}/#{name}.csv") do
+             {:ok, _} -> :infinity
+             {:error, _} -> 1
+         end
       end
       pgs = pages(api, win)
       case restart > pgs do
