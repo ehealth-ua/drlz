@@ -6,8 +6,8 @@
 
 ## Features
 
-* DEC DRLZ API: https://drlz.info/api/docs
 * Network Error Prune CSV Downloader
+* Proper Restart Support
 
 ## How to use?
 
