@@ -1,9 +1,6 @@
 defmodule DRLZ do
   use Application
   require Logger
-
-  @doc false
-  @endpoint (:application.get_env(:drlz, :endpoint, "https://drlz.info/api"))
   @page_bulk 100
 
   def start_link(opt) do {:ok, :erlang.spawn_link(fn -> sync(opt) end)} end
@@ -17,8 +14,6 @@ defmodule DRLZ do
   end
 
   def sync(folder) do
-      {:ok, bearer} = :application.get_env(:drlz, :bearer)
-      Logger.debug "ESOZ DEC DRLZ SYNC: #{@endpoint}"
       sync_table(folder, "/fhir/ingredients",                "ingredients")
       sync_table(folder, "/fhir/package-medicinal-products", "packages")
       sync_table(folder, "/fhir/medicinal-product",          "products")
@@ -34,27 +29,28 @@ defmodule DRLZ do
          {:error, _} -> 1
       end
       pgs = pages(api, win)
-      Enum.each(restart..pgs, fn y ->
-        case items(api, y, win) do
-            recs when is_list(recs) ->
-               Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
-               flat = :lists.foldl(fn x, acc -> acc <> xform(name, x) end, "", recs)
-               writeFile(flat, name, folder)
-               :file.write_file("priv/#{folder}/#{name}.dow", Integer.to_string(y), [:raw, :binary])
-            _ ->
-               Logger.debug("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: N/A")
-        end
-      end)
+      case restart > pgs do
+           true -> :skip
+           _ ->  Enum.each(restart..pgs, fn y -> case items(api, y, win) do
+                 recs when is_list(recs) ->
+                      Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
+                      flat = :lists.foldl(fn x, acc -> acc <> xform(name, x) end, "", recs)
+                      writeFile(flat, name, folder)
+                      :file.write_file("priv/#{folder}/#{name}.dow", Integer.to_string(y), [:raw, :binary])
+                 _ -> Logger.debug("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: N/A")
+           end end)
+      end
   end
 
   def pages(url,       win \\ @page_bulk) do retrive(url, win, 1,    fn res -> Map.get(res, "pages", 0)  end) end
   def items(url, page, win \\ @page_bulk) do retrive(url, win, page, fn res -> Map.get(res, "items", []) end) end
 
   def retrive(url, win, page, fun) do
-      bearer = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
-      accept = 'application/json'
-      headers = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
-      address = '#{@endpoint}#{url}?page=#{page}&limit=#{win}'
+      bearer   = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
+      endpoint = :application.get_env(:drlz, :endpoint, "https://drlz.info/api")
+      accept   = 'application/json'
+      headers  = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
+      address  = '#{endpoint}#{url}?page=#{page}&limit=#{win}'
       case :httpc.request(:get, {address, headers}, [{:timeout,:application.get_env(:drlz,:timeout,100000)},verify()], [{:body_format,:binary}]) do
          {:ok,{{_,status,_},_headers,body}} ->
              case status do
@@ -63,7 +59,9 @@ defmodule DRLZ do
              _ when status >= 400 and status < 500 -> Logger.error("Resource not available: #{address}") ; 0
              _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
              _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body)) end
-         {:error,reason} -> raise "Network Error"
+         {:error,reason} ->
+             Logger.error("Network Error: #{:io_lib.format('~p',[reason])}")
+             raise "Network Error" # crash
       end
   end
 

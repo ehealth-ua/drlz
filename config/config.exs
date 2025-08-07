@@ -2,7 +2,7 @@ import Config
 
 config :drlz,
   tables: [:drlz],
-  timeout: 10000,
+  timeout: 60000,
   bearer: System.get_env("DRLZ"),
   logger_level: :info,
   logger: [{:handler, :default2, :logger_std_h,
