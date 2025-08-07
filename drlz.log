@@ -2765,3 +2765,101 @@
 2025-08-07T12:14:50.073725+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [226], pages: [254], window: [100]
 2025-08-07T12:15:06.385031+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [227], pages: [254], window: [100]
 2025-08-07T12:15:23.167959+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [228], pages: [254], window: [100]
+2025-08-07T12:15:39.158074+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [229], pages: [254], window: [100]
+2025-08-07T12:15:55.698860+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [230], pages: [254], window: [100]
+2025-08-07T12:16:11.896571+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [231], pages: [254], window: [100]
+2025-08-07T12:16:16.481979+03:00 <0.261.0>  Fatal Error: Traceback (most recent call last):, File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 104, in run, result = self.view_func(request, **values), File "/medical/apps/api/fhir/routers.py", line 577, in get_package_medicinal_products, pmp_items = [pmp.as_fhir_detail() for pmp in paginate_objects.object_list.all()], File "/medical/apps/api/fhir/routers.py", line 577, in <listcomp>, pmp_items = [pmp.as_fhir_detail() for pmp in paginate_objects.object_list.all()], File "/medical/apps/medicinalproduct/models/package.py", line 205, in as_fhir_detail, "packaging": [pic.as_pmp_fhir() for pic in self.packageitemcontainer_set.all()], File "/medical/apps/medicinalproduct/models/package.py", line 205, in <listcomp>, "packaging": [pic.as_pmp_fhir() for pic in self.packageitemcontainer_set.all()], File "/medical/apps/medicinalproduct/models/package.py", line 83, in as_pmp_fhir, "manufacturer": [manufacturer.as_fhir_v2() for manufacturer in self.manufacturers.all()], File "/medical/apps/medicinalproduct/models/package.py", line 83, in <listcomp>, "manufacturer": [manufacturer.as_fhir_v2() for manufacturer in self.manufacturers.all()], File "/medical/apps/organisation/models.py", line 289, in as_fhir_v2, "manufacturer": {"reference": f"Organization/{self.manufacturer.organisation_name}"}, AttributeError: 'NoneType' object has no attribute 'organisation_name'
+2025-08-07T12:16:16.483011+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [232], pages: [254], window: N/A
+2025-08-07T12:16:16.499415+03:00 <0.285.0>  Supervisor: {<0.285.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.286.0>.
+2025-08-07T12:16:16.499593+03:00 <0.285.0>  Supervisor: {<0.285.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.287.0>.
+2025-08-07T12:16:16.526373+03:00 <0.290.0>  Supervisor: {<0.290.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.291.0>.
+2025-08-07T12:16:16.526525+03:00 <0.290.0>  Supervisor: {<0.290.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.292.0>.
+2025-08-07T12:16:32.416496+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [233], pages: [254], window: [100]
+2025-08-07T12:16:49.285936+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [234], pages: [254], window: [100]
+2025-08-07T12:17:05.790143+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [235], pages: [254], window: [100]
+2025-08-07T12:17:21.757235+03:00 <0.261.0>  Fatal Error: Traceback (most recent call last):, File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 105, in run, return self._result_to_response(request, result, temporal_response), File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 202, in _result_to_response, result = response_model.from_orm(resp_object).dict(, File "/usr/local/lib/python3.7/site-packages/ninja/schema.py", line 164, in from_orm, return super().from_orm(obj), File "pydantic/main.py", line 574, in pydantic.main.BaseModel.from_orm, pydantic.error_wrappers.ValidationError: 6 validation errors for NinjaResponseSchema, response -> items -> 85 -> packaging -> 0 -> shellLifeStorage -> 0 -> period -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 85 -> packaging -> 0 -> packaging -> 0 -> shellLifeStorage -> 0 -> period -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 85 -> packaging -> 1 -> shellLifeStorage -> 0 -> period -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 86 -> packaging -> 0 -> shellLifeStorage -> 0 -> period -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 86 -> packaging -> 0 -> packaging -> 0 -> shellLifeStorage -> 0 -> period -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 86 -> packaging -> 1 -> shellLifeStorage -> 0 -> period -> value, none is not an allowed value (type=type_error.none.not_allowed)
+2025-08-07T12:17:21.758555+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [236], pages: [254], window: N/A
+2025-08-07T12:17:21.777323+03:00 <0.296.0>  Supervisor: {<0.296.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.297.0>.
+2025-08-07T12:17:21.777463+03:00 <0.296.0>  Supervisor: {<0.296.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.298.0>.
+2025-08-07T12:17:21.804008+03:00 <0.301.0>  Supervisor: {<0.301.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.302.0>.
+2025-08-07T12:17:21.804161+03:00 <0.301.0>  Supervisor: {<0.301.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.303.0>.
+2025-08-07T12:17:37.437706+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [237], pages: [254], window: [100]
+2025-08-07T12:17:54.752843+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [238], pages: [254], window: [100]
+2025-08-07T12:18:10.401006+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [239], pages: [254], window: [100]
+2025-08-07T12:18:26.527407+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [240], pages: [254], window: [100]
+2025-08-07T12:18:42.175117+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [241], pages: [254], window: [100]
+2025-08-07T12:18:57.948295+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [242], pages: [254], window: [100]
+2025-08-07T12:19:15.818356+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [243], pages: [254], window: [100]
+2025-08-07T12:19:32.784293+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [244], pages: [254], window: [100]
+2025-08-07T12:19:48.769606+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [245], pages: [254], window: [100]
+2025-08-07T12:20:05.747932+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [246], pages: [254], window: [100]
+2025-08-07T12:20:22.144500+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [247], pages: [254], window: [100]
+2025-08-07T12:20:37.380571+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [248], pages: [254], window: [100]
+2025-08-07T12:20:52.981655+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [249], pages: [254], window: [100]
+2025-08-07T12:21:09.202184+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [250], pages: [254], window: [100]
+2025-08-07T12:21:25.779680+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [251], pages: [254], window: [100]
+2025-08-07T12:21:42.053065+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [252], pages: [254], window: [100]
+2025-08-07T12:21:57.206486+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [253], pages: [254], window: [100]
+2025-08-07T12:22:09.810743+03:00 <0.261.0>  epoc: [2025-08-07], table: [packages], page: [254], pages: [254], window: [74]
+2025-08-07T12:22:25.082131+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [1], pages: [177], window: [100]
+2025-08-07T12:22:32.762302+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [2], pages: [177], window: [100]
+2025-08-07T12:22:39.829624+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [3], pages: [177], window: [100]
+2025-08-07T12:22:47.840003+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [4], pages: [177], window: [100]
+2025-08-07T12:22:55.184927+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [5], pages: [177], window: [100]
+2025-08-07T12:23:02.650758+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [6], pages: [177], window: [100]
+2025-08-07T12:23:10.452006+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [7], pages: [177], window: [100]
+2025-08-07T12:23:17.800539+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [8], pages: [177], window: [100]
+2025-08-07T12:23:25.668492+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [9], pages: [177], window: [100]
+2025-08-07T12:23:33.513976+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [10], pages: [177], window: [100]
+2025-08-07T12:23:40.504640+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [11], pages: [177], window: [100]
+2025-08-07T12:23:47.784033+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [12], pages: [177], window: [100]
+2025-08-07T12:23:55.410852+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [13], pages: [177], window: [100]
+2025-08-07T12:24:02.616432+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [14], pages: [177], window: [100]
+2025-08-07T12:24:09.640578+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [15], pages: [177], window: [100]
+2025-08-07T12:24:17.212728+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [16], pages: [177], window: [100]
+2025-08-07T12:24:24.831214+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [17], pages: [177], window: [100]
+2025-08-07T12:24:32.831290+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [18], pages: [177], window: [100]
+2025-08-07T12:24:39.903694+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [19], pages: [177], window: [100]
+2025-08-07T12:24:47.188548+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [20], pages: [177], window: [100]
+2025-08-07T12:24:54.292942+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [21], pages: [177], window: [100]
+2025-08-07T12:25:02.400080+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [22], pages: [177], window: [100]
+2025-08-07T12:25:09.838496+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [23], pages: [177], window: [100]
+2025-08-07T12:25:17.078937+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [24], pages: [177], window: [100]
+2025-08-07T12:25:24.439575+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [25], pages: [177], window: [100]
+2025-08-07T12:25:32.388958+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [26], pages: [177], window: [100]
+2025-08-07T12:25:39.509494+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [27], pages: [177], window: [100]
+2025-08-07T12:25:46.439502+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [28], pages: [177], window: [100]
+2025-08-07T12:25:53.913042+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [29], pages: [177], window: [100]
+2025-08-07T12:26:01.248209+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [30], pages: [177], window: [100]
+2025-08-07T12:26:09.437489+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [31], pages: [177], window: [100]
+2025-08-07T12:26:17.552631+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [32], pages: [177], window: [100]
+2025-08-07T12:26:24.663851+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [33], pages: [177], window: [100]
+2025-08-07T12:26:32.315943+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [34], pages: [177], window: [100]
+2025-08-07T12:26:40.318290+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [35], pages: [177], window: [100]
+2025-08-07T12:26:47.929818+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [36], pages: [177], window: [100]
+2025-08-07T12:26:55.347997+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [37], pages: [177], window: [100]
+2025-08-07T12:27:02.812367+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [38], pages: [177], window: [100]
+2025-08-07T12:27:10.603280+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [39], pages: [177], window: [100]
+2025-08-07T12:27:18.169348+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [40], pages: [177], window: [100]
+2025-08-07T12:27:25.077331+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [41], pages: [177], window: [100]
+2025-08-07T12:27:32.677823+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [42], pages: [177], window: [100]
+2025-08-07T12:27:39.980106+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [43], pages: [177], window: [100]
+2025-08-07T12:27:47.894266+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [44], pages: [177], window: [100]
+2025-08-07T12:27:55.170709+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [45], pages: [177], window: [100]
+2025-08-07T12:28:02.807008+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [46], pages: [177], window: [100]
+2025-08-07T12:28:10.070238+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [47], pages: [177], window: [100]
+2025-08-07T12:28:18.387642+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [48], pages: [177], window: [100]
+2025-08-07T12:28:25.761371+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [49], pages: [177], window: [100]
+2025-08-07T12:28:33.235787+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [50], pages: [177], window: [100]
+2025-08-07T12:28:40.835316+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [51], pages: [177], window: [100]
+2025-08-07T12:28:49.425137+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [52], pages: [177], window: [100]
+2025-08-07T12:28:56.913027+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [53], pages: [177], window: [100]
+2025-08-07T12:29:04.251549+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [54], pages: [177], window: [100]
+2025-08-07T12:29:10.870562+03:00 <0.260.0>  Supervisor: {local,'Elixir.DRLZ'}. Started: id='Elixir.DRLZ',pid=<0.261.0>.
+2025-08-07T12:29:10.875532+03:00 <0.44.0>  Application: drlz. Started at: nonode@nohost.
+2025-08-07T12:29:10.944056+03:00 <0.266.0>  Supervisor: {local,inet_gethost_native_sup}. Started: pid=<0.267.0>,mfa={inet_gethost_native,init,[[]]}.
+2025-08-07T12:29:10.944280+03:00 <0.77.0>  Supervisor: {local,kernel_safe_sup}. Started: id=inet_gethost_native_sup,pid=<0.266.0>.
+2025-08-07T12:29:10.969726+03:00 <0.269.0>  Supervisor: {<0.269.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.270.0>.
+2025-08-07T12:29:10.969906+03:00 <0.269.0>  Supervisor: {<0.269.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.271.0>.
+2025-08-07T12:29:11.062221+03:00 <0.275.0>  Supervisor: {<0.275.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.276.0>.
+2025-08-07T12:29:11.062464+03:00 <0.275.0>  Supervisor: {<0.275.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.277.0>.
