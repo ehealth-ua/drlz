@@ -1,22 +1,24 @@
 defmodule DRLZ do
-  require Logger
   use Application
-  @page_bulk 100
-  @endpoint (:application.get_env(:drlz, :endpoint, "https://drlz.info/api"))
+  require Logger
 
-  def start(_, _) do
+  @doc false
+  @endpoint (:application.get_env(:drlz, :endpoint, "https://drlz.info/api"))
+  @page_bulk 100
+
+  def start_link(opt) do {:ok, :erlang.spawn_link(fn -> sync(opt) end)} end
+  def child_spec(opt) do %{ id: DRLZ, start: {DRLZ, :start_link, [opt]}, type: :worker, restart: :permanent, shutdown: 500 } end
+
+  def start(_type, _args) do
       :logger.add_handlers(:drlz)
-      children = [ ]
-      opts = [strategy: :one_for_one, name: App.Supervisor]
-      {:ok, bearer} = :application.get_env(:drlz, :bearer)
-      IO.puts "ESOZ DEC DRLZ SYNC: #{@endpoint}"
-      IO.puts "Bearer: #{bearer}"
-      spawn(fn -> sync() end)
+      children = [ { DRLZ, Date.to_string(Date.utc_today) } ]
+      opts = [strategy: :one_for_one, name: DRLZ]
       Supervisor.start_link(children, opts)
   end
 
-
-  def sync(folder \\ Date.to_string(Date.utc_today)) do
+  def sync(folder) do
+      {:ok, bearer} = :application.get_env(:drlz, :bearer)
+      Logger.debug "ESOZ DEC DRLZ SYNC: #{@endpoint}"
       sync_table(folder, "/fhir/ingredients",                "ingredients")
       sync_table(folder, "/fhir/package-medicinal-products", "packages")
       sync_table(folder, "/fhir/medicinal-product",          "products")
@@ -45,6 +47,26 @@ defmodule DRLZ do
       end)
   end
 
+  def pages(url,       win \\ @page_bulk) do retrive(url, win, 1,    fn res -> Map.get(res, "pages", 0)  end) end
+  def items(url, page, win \\ @page_bulk) do retrive(url, win, page, fn res -> Map.get(res, "items", []) end) end
+
+  def retrive(url, win, page, fun) do
+      bearer = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
+      accept = 'application/json'
+      headers = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
+      address = '#{@endpoint}#{url}?page=#{page}&limit=#{win}'
+      case :httpc.request(:get, {address, headers}, [{:timeout,:application.get_env(:drlz,:timeout,100000)},verify()], [{:body_format,:binary}]) do
+         {:ok,{{_,status,_},_headers,body}} ->
+             case status do
+             _ when status >= 100 and status < 200 -> Logger.error("WebSockets not supported: #{body}") ; 0
+              _ when status >= 500 and status < 600 -> Logger.error("Fatal Error: #{body}") ; 0
+             _ when status >= 400 and status < 500 -> Logger.error("Resource not available: #{address}") ; 0
+             _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
+             _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body)) end
+         {:error,reason} -> raise "Client"
+      end
+  end
+
   def xform("ingredients", x)   do readIngredient(x) end
   def xform("organizations", x) do readOrganization(x) end
   def xform("substances", x)    do readSubstance(x) end
@@ -52,34 +74,6 @@ defmodule DRLZ do
   def xform("forms", x)         do readForm(x) end
   def xform("licenses", x)      do readLicense(x) end
   def xform("packages", x)      do readPackage(x) end
-
-  def verify(), do: {:ssl, [{:verify, :verify_none}]}
-
-  def retrive(url, win, page, fun) do
-      bearer = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
-      accept = 'application/json'
-      headers = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
-      address = '#{@endpoint}#{url}?page=#{page}&limit=#{win}'
-      {:ok,{{_,status,_},_headers,body}} =
-         :httpc.request(:get, {address, headers},
-           [{:timeout,100000},verify()], [{:body_format,:binary}])
-      case status do
-           _ when status >= 100 and status < 200 -> Logger.error("WebSockets not supported: #{body}") ; 0
-           _ when status >= 500 and status < 600 -> Logger.error("Fatal Error: #{body}") ; 0
-           _ when status >= 400 and status < 500 -> Logger.error("Resource not available: #{address}") ; 0
-           _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
-           _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body))
-      end
-  end
-
-  def pages(url,       win \\ @page_bulk) do retrive(url, win, 1,    fn res -> Map.get(res, "pages", 0)  end) end
-  def items(url, page, win \\ @page_bulk) do retrive(url, win, page, fn res -> Map.get(res, "items", []) end) end
-
-  def writeFile(record, name, folder) do
-      :filelib.ensure_dir("priv/#{folder}/")
-      :file.write_file("priv/#{folder}/#{name}.csv", record, [:append, :raw, :binary])
-      record
-  end
 
   def readIngredient(inn) do
       %{"for" => references, "pk" => pk, "substance" => %{"coding" => [%{"code" => code, "display" => display, "system" => _system}]}} = inn
@@ -122,11 +116,6 @@ defmodule DRLZ do
       "#{pk},#{value},#{pkg},#{start},#{finish}\n"
   end
 
-  def unrollPackage([]) do [] end
-  def unrollPackage([pkg]) do unrollPackage(pkg) end
-  def unrollPackage(%{"containedItem" => item, "packaging" => []}) do item end
-  def unrollPackage(%{"packaging" => packaging}) do unrollPackage(hd(packaging)) end
-
   def readPackage(pkg) do
       %{"pk" => pk,  "manufacturer" => manu_list, "packageFor" => [%{"reference" => product}], "packaging" => packaging} = pkg
       manu = case manu_list do
@@ -145,5 +134,18 @@ defmodule DRLZ do
            end end, "", packaging)
       "#{pk},#{prod},#{form},#{man}\n"
   end
+
+  def writeFile(record, name, folder) do
+      :filelib.ensure_dir("priv/#{folder}/")
+      :file.write_file("priv/#{folder}/#{name}.csv", record, [:append, :raw, :binary])
+      record
+  end
+
+  def verify(), do: {:ssl, [{:verify, :verify_none}]}
+
+  def unrollPackage([]) do [] end
+  def unrollPackage([pkg]) do unrollPackage(pkg) end
+  def unrollPackage(%{"containedItem" => item, "packaging" => []}) do item end
+  def unrollPackage(%{"packaging" => packaging}) do unrollPackage(hd(packaging)) end
 
 end

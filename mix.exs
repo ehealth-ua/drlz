@@ -30,7 +30,7 @@ defmodule MRS.Mixfile do
 
   def deps do
     [
-      {:ex_doc, "~> 0.21", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:jsone, "~> 1.5.1"}
     ]
   end

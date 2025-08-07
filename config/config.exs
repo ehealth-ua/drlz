@@ -1,7 +1,8 @@
 import Config
 
 config :drlz,
-  load_on_start: false,
+  tables: [:drlz],
+  timeout: 10000,
   bearer: System.get_env("DRLZ"),
   logger_level: :info,
   logger: [{:handler, :default2, :logger_std_h,
