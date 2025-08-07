@@ -30,7 +30,7 @@ defmodule DRLZ do
       end
       pgs = pages(api, win)
       case restart > pgs do
-           true -> :skip
+           true -> :file.delete("priv/#{folder}/#{name}.dow")
            _ ->  Enum.each(restart..pgs, fn y -> case items(api, y, win) do
                  recs when is_list(recs) ->
                       Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
