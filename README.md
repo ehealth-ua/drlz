@@ -11,7 +11,7 @@
 
 ## How to use?
 
-On UNIX:
+Run using Elixir:
 
 ```
 $ sudo apt install erlang elixir
@@ -21,6 +21,14 @@ $ mix deps.get
 $ export DRLZ=$DRLZ_JWT_BEARER
 $ iex -S mix
 ```
+
+Follow Logs:
+
+```
+$ tail -f drlz.log
+```
+
+Copy Data:
 
 ```
 $ ls -l priv/2025-08-06
