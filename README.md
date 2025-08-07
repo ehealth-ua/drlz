@@ -40,7 +40,6 @@ total 31500
 -rw-r--r-- 1 tonpa tonpa  2799766 Aug  7 12:22 packages.csv
 -rw-r--r-- 1 tonpa tonpa  2611173 Aug  7 12:44 products.csv
 -rw-r--r-- 1 tonpa tonpa  1346909 Aug  7 12:49 substances.csv
-
 ```
 
 ## Credits
