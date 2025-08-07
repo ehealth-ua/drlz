@@ -5,8 +5,8 @@ defmodule MRS.Mixfile do
     [
       app: :drlz,
       version: "0.12.0",
-      elixir: ">= 1.9.0",
       description: "ESOZ DEC DRLZ SYNC",
+      xref: [exclude: [:crypto]],
       package: package(),
       deps: deps()
     ]
@@ -14,7 +14,7 @@ defmodule MRS.Mixfile do
 
   def application do
     [ mod: { DRLZ, [] },
-      extra_applications: [ :jsone, :logger, :inets, :ssl ]
+      extra_applications: [ :jsone, :logger, :inets, :ssl, :crypto ]
     ]
   end
 
