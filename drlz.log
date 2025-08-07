@@ -202,3 +202,44 @@
 2025-08-07T03:26:13.481232+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [151], pages: [1764], window: [100]
 2025-08-07T03:26:19.024124+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [152], pages: [1764], window: [100]
 2025-08-07T03:26:24.985036+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [153], pages: [1764], window: [100]
+2025-08-07T03:26:30.873028+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [154], pages: [1764], window: [100]
+2025-08-07T03:26:35.822259+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [155], pages: [1764], window: [100]
+2025-08-07T03:26:41.379801+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [156], pages: [1764], window: [100]
+2025-08-07T03:26:46.708875+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [157], pages: [1764], window: [100]
+2025-08-07T03:26:51.656026+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [158], pages: [1764], window: [100]
+2025-08-07T03:26:57.421260+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [159], pages: [1764], window: [100]
+2025-08-07T03:27:04.499813+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [160], pages: [1764], window: [100]
+2025-08-07T03:27:11.554911+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [161], pages: [1764], window: [100]
+2025-08-07T03:27:18.216599+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [162], pages: [1764], window: [100]
+2025-08-07T03:27:23.581407+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [163], pages: [1764], window: [100]
+2025-08-07T03:27:28.222165+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [164], pages: [1764], window: [100]
+2025-08-07T03:27:32.608177+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [165], pages: [1764], window: [100]
+2025-08-07T03:27:37.287102+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [166], pages: [1764], window: [100]
+2025-08-07T03:27:42.084826+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [167], pages: [1764], window: [100]
+2025-08-07T03:27:47.147761+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [168], pages: [1764], window: [100]
+2025-08-07T03:27:52.247202+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [169], pages: [1764], window: [100]
+2025-08-07T03:27:57.420454+03:00 <0.240.0>  Fatal Error: Traceback (most recent call last):, File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 105, in run, return self._result_to_response(request, result, temporal_response), File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 202, in _result_to_response, result = response_model.from_orm(resp_object).dict(, File "/usr/local/lib/python3.7/site-packages/ninja/schema.py", line 164, in from_orm, return super().from_orm(obj), File "pydantic/main.py", line 574, in pydantic.main.BaseModel.from_orm, pydantic.error_wrappers.ValidationError: 8 validation errors for NinjaResponseSchema, response -> items -> 57 -> substance -> strength -> concentrationRatio -> numerator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 57 -> substance -> strength -> concentrationRatio -> denominator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 58 -> substance -> strength -> concentrationRatio -> numerator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 58 -> substance -> strength -> concentrationRatio -> denominator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 59 -> substance -> strength -> concentrationRatio -> numerator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 59 -> substance -> strength -> concentrationRatio -> denominator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 60 -> substance -> strength -> concentrationRatio -> numerator -> value, none is not an allowed value (type=type_error.none.not_allowed), response -> items -> 60 -> substance -> strength -> concentrationRatio -> denominator -> value, none is not an allowed value (type=type_error.none.not_allowed)
+2025-08-07T03:27:57.422502+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [170], pages: [1764], window: N/A
+2025-08-07T03:27:57.435693+03:00 <0.304.0>  Supervisor: {<0.304.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.305.0>.
+2025-08-07T03:27:57.435850+03:00 <0.304.0>  Supervisor: {<0.304.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.306.0>.
+2025-08-07T03:27:57.463834+03:00 <0.308.0>  Supervisor: {<0.308.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.309.0>.
+2025-08-07T03:27:57.463999+03:00 <0.308.0>  Supervisor: {<0.308.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.310.0>.
+2025-08-07T03:28:03.146227+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [171], pages: [1764], window: [100]
+2025-08-07T03:28:08.347431+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [172], pages: [1764], window: [100]
+2025-08-07T03:28:14.396996+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [173], pages: [1764], window: [100]
+2025-08-07T03:28:19.891481+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [174], pages: [1764], window: [100]
+2025-08-07T03:28:25.129666+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [175], pages: [1764], window: [100]
+2025-08-07T03:28:30.177290+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [176], pages: [1764], window: [100]
+2025-08-07T03:28:35.665279+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [177], pages: [1764], window: [100]
+2025-08-07T03:28:43.270123+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [178], pages: [1764], window: [100]
+2025-08-07T03:28:49.940797+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [179], pages: [1764], window: [100]
+2025-08-07T03:28:55.017992+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [180], pages: [1764], window: [100]
+2025-08-07T03:28:59.764815+03:00 <0.240.0>  Fatal Error: Traceback (most recent call last):, File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 105, in run, return self._result_to_response(request, result, temporal_response), File "/usr/local/lib/python3.7/site-packages/ninja/operation.py", line 202, in _result_to_response, result = response_model.from_orm(resp_object).dict(, File "/usr/local/lib/python3.7/site-packages/ninja/schema.py", line 164, in from_orm, return super().from_orm(obj), File "pydantic/main.py", line 574, in pydantic.main.BaseModel.from_orm, pydantic.error_wrappers.ValidationError: 1 validation error for NinjaResponseSchema, response -> items -> 19 -> substance -> strength -> presentationRatio -> denominator -> value, none is not an allowed value (type=type_error.none.not_allowed)
+2025-08-07T03:28:59.765590+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [181], pages: [1764], window: N/A
+2025-08-07T03:28:59.775023+03:00 <0.325.0>  Supervisor: {<0.325.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.326.0>.
+2025-08-07T03:28:59.775155+03:00 <0.325.0>  Supervisor: {<0.325.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.327.0>.
+2025-08-07T03:28:59.800079+03:00 <0.329.0>  Supervisor: {<0.329.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.330.0>.
+2025-08-07T03:28:59.800221+03:00 <0.329.0>  Supervisor: {<0.329.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.331.0>.
+2025-08-07T03:29:05.169053+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [182], pages: [1764], window: [100]
+2025-08-07T03:29:10.631183+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [183], pages: [1764], window: [100]
+2025-08-07T03:29:15.950247+03:00 <0.240.0>  epoc: [2025-08-07], table: [ingredients], page: [184], pages: [1764], window: [100]
