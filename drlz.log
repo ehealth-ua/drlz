@@ -2863,3 +2863,30 @@
 2025-08-07T12:29:10.969906+03:00 <0.269.0>  Supervisor: {<0.269.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.271.0>.
 2025-08-07T12:29:11.062221+03:00 <0.275.0>  Supervisor: {<0.275.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.276.0>.
 2025-08-07T12:29:11.062464+03:00 <0.275.0>  Supervisor: {<0.275.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.277.0>.
+2025-08-07T12:29:43.977750+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [55], pages: [177], window: [100]
+2025-08-07T12:29:51.248245+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [56], pages: [177], window: [100]
+2025-08-07T12:29:59.353129+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [57], pages: [177], window: [100]
+2025-08-07T12:30:06.850237+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [58], pages: [177], window: [100]
+2025-08-07T12:30:14.189011+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [59], pages: [177], window: [100]
+2025-08-07T12:30:21.104362+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [60], pages: [177], window: [100]
+2025-08-07T12:30:28.544800+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [61], pages: [177], window: [100]
+2025-08-07T12:30:35.340061+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [62], pages: [177], window: [100]
+2025-08-07T12:30:42.482019+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [63], pages: [177], window: [100]
+2025-08-07T12:30:50.302738+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [64], pages: [177], window: [100]
+2025-08-07T12:30:58.211395+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [65], pages: [177], window: [100]
+2025-08-07T12:31:05.369674+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [66], pages: [177], window: [100]
+2025-08-07T12:31:12.845804+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [67], pages: [177], window: [100]
+2025-08-07T12:31:20.092467+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [68], pages: [177], window: [100]
+2025-08-07T12:31:27.769485+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [69], pages: [177], window: [100]
+2025-08-07T12:31:35.922890+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [70], pages: [177], window: [100]
+2025-08-07T12:31:43.312144+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [71], pages: [177], window: [100]
+2025-08-07T12:31:51.013156+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [72], pages: [177], window: [100]
+2025-08-07T12:31:58.866572+03:00 <0.261.0>  epoc: [2025-08-07], table: [products], page: [73], pages: [177], window: [100]
+2025-08-07T12:32:04.530971+03:00 <0.260.0>  Supervisor: {local,'Elixir.DRLZ'}. Started: id='Elixir.DRLZ',pid=<0.261.0>.
+2025-08-07T12:32:04.534990+03:00 <0.44.0>  Application: drlz. Started at: nonode@nohost.
+2025-08-07T12:32:04.599224+03:00 <0.266.0>  Supervisor: {local,inet_gethost_native_sup}. Started: pid=<0.267.0>,mfa={inet_gethost_native,init,[[]]}.
+2025-08-07T12:32:04.599357+03:00 <0.77.0>  Supervisor: {local,kernel_safe_sup}. Started: id=inet_gethost_native_sup,pid=<0.266.0>.
+2025-08-07T12:32:04.623431+03:00 <0.269.0>  Supervisor: {<0.269.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.270.0>.
+2025-08-07T12:32:04.623576+03:00 <0.269.0>  Supervisor: {<0.269.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.271.0>.
+2025-08-07T12:32:04.729028+03:00 <0.275.0>  Supervisor: {<0.275.0>,tls_dyn_connection_sup}. Started: id=sender,pid=<0.276.0>.
+2025-08-07T12:32:04.729186+03:00 <0.275.0>  Supervisor: {<0.275.0>,tls_dyn_connection_sup}. Started: id=receiver,pid=<0.277.0>.

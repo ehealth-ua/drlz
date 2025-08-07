@@ -24,26 +24,28 @@ defmodule DRLZ do
   end
 
   def sync_table(folder, api, name, win \\ @page_bulk) do
-      restart = case :file.read_file("priv/#{folder}/#{name}.dow") do
+      dow = "priv/#{folder}/#{name}.dow"
+      csv = "priv/#{folder}/#{name}.csv"
+      restart = case :file.read_file(dow) do
          {:ok, bin} -> :erlang.binary_to_integer(bin) + 1
-         {:error, _} -> case :file.read_file("priv/#{folder}/#{name}.csv") do
+         {:error, _} -> case :file.read_file(csv) do
              {:ok, _} -> :infinity
              {:error, _} -> 1
          end
       end
       pgs = pages(api, win)
       case restart > pgs do
-           true -> :file.delete("priv/#{folder}/#{name}.dow")
+           true -> :file.delete(dow)
            _ ->  Enum.each(restart..pgs, fn y -> case items(api, y, win) do
                  recs when is_list(recs) ->
                       Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       flat = :lists.foldl(fn x, acc -> acc <> xform(name, x) end, "", recs)
                       writeFile(flat, name, folder)
-                      :file.write_file("priv/#{folder}/#{name}.dow", Integer.to_string(y), [:raw, :binary])
+                      :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
                  _ -> Logger.debug("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: N/A")
                  end end)
                  case restart == pgs do
-                      true -> :file.delete("priv/#{folder}/#{name}.dow")
+                      true -> :file.delete(dow)
                       false -> :skip
                  end
       end
