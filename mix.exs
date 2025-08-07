@@ -4,7 +4,7 @@ defmodule MRS.Mixfile do
   def project do
     [
       app: :drlz,
-      version: "0.12.0",
+      version: "0.8.7",
       description: "ESOZ DEC DRLZ SYNC",
       xref: [exclude: [:crypto]],
       package: package(),
@@ -34,4 +34,5 @@ defmodule MRS.Mixfile do
       {:jsone, "~> 1.5.1"}
     ]
   end
+
 end
