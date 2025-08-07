@@ -18,6 +18,7 @@ $ sudo apt install erlang elixir
 $ git clone git@github.com:ehealth-ua/drlz
 $ cd drlz
 $ mix deps.get
+$ export DRLZ=$DRLZ_JWT_BEARER
 $ iex -S mix
 ```
 
