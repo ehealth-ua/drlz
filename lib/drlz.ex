@@ -19,7 +19,7 @@ defmodule DRLZ do
       sync_table(epoc, "/fhir/medicinal-product",          "products")
       sync_table(epoc, "/fhir/substance-definitions",      "substances")
       sync_table(epoc, "/fhir/authorisations",             "licenses")
-      sync_table(epoc, "/fhir/manufactured-items",         "forms")
+      sync_table(epoc, "/fhir/manufactured-items",         "forms", 20)
       sync_table(epoc, "/fhir/organization",               "organizations")
   end
 
@@ -48,10 +48,10 @@ defmodule DRLZ do
       end
   end
 
-  def pages(url,       win \\ @page_bulk) do retrive(url, win, 1,    fn res -> Map.get(res, "pages", 0)  end) end
-  def items(url, page, win \\ @page_bulk) do retrive(url, win, page, fn res -> Map.get(res, "items", []) end) end
+  def pages(url,       win \\ @page_bulk) do retrieve(url, win, 1,    fn res -> Map.get(res, "pages", 0)  end) end
+  def items(url, page, win \\ @page_bulk) do retrieve(url, win, page, fn res -> Map.get(res, "items", []) end) end
 
-  def retrive(url, win, page, fun) do
+  def retrieve(url, win, page, fun) do
       bearer   = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
       endpoint = :application.get_env(:drlz, :endpoint, "https://drlz.info/api")
       accept   = 'application/json'
