@@ -13,14 +13,14 @@ defmodule DRLZ do
       Supervisor.start_link(children, opts)
   end
 
-  def sync(folder) do
-      sync_table(folder, "/fhir/ingredients",                "ingredients")
-      sync_table(folder, "/fhir/package-medicinal-products", "packages")
-      sync_table(folder, "/fhir/medicinal-product",          "products")
-      sync_table(folder, "/fhir/substance-definitions",      "substances")
-      sync_table(folder, "/fhir/authorisations",             "licenses")
-      sync_table(folder, "/fhir/manufactured-items",         "forms")
-      sync_table(folder, "/fhir/organization",               "organizations")
+  def sync(epoc) do
+      sync_table(epoc, "/fhir/ingredients",                "ingredients")
+      sync_table(epoc, "/fhir/package-medicinal-products", "packages")
+      sync_table(epoc, "/fhir/medicinal-product",          "products")
+      sync_table(epoc, "/fhir/substance-definitions",      "substances")
+      sync_table(epoc, "/fhir/authorisations",             "licenses")
+      sync_table(epoc, "/fhir/manufactured-items",         "forms")
+      sync_table(epoc, "/fhir/organization",               "organizations")
   end
 
   def sync_table(folder, api, name, win \\ @page_bulk) do
@@ -39,7 +39,7 @@ defmodule DRLZ do
            _ ->  Enum.each(restart..pgs, fn y -> case items(api, y, win) do
                  recs when is_list(recs) ->
                       Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
-                      flat = :lists.foldl(fn x, acc -> acc <> xform(name, x) end, "", recs)
+                      flat = :lists.foldl(fn x, acc -> acc <> read(name, x) end, "", recs)
                       writeFile(flat, name, folder)
                       :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
                  _ -> Logger.debug("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: N/A")
@@ -74,15 +74,7 @@ defmodule DRLZ do
       end
   end
 
-  def xform("ingredients", x)   do readIngredient(x) end
-  def xform("organizations", x) do readOrganization(x) end
-  def xform("substances", x)    do readSubstance(x) end
-  def xform("products", x)      do readProduct(x) end
-  def xform("forms", x)         do readForm(x) end
-  def xform("licenses", x)      do readLicense(x) end
-  def xform("packages", x)      do readPackage(x) end
-
-  def readIngredient(inn) do
+  def read("ingredients",inn) do
       %{"for" => references, "pk" => pk, "substance" => %{"coding" => [%{"code" => code, "display" => display, "system" => _system}]}} = inn
       man = Enum.join(Enum.map(references, & &1["reference"]), ",")
       man = String.replace(man, "ManufacturedItemDefinition", "")
@@ -90,18 +82,18 @@ defmodule DRLZ do
       "#{pk},#{code},#{display},#{man}\n"
   end
 
-  def readOrganization(company) do
+  def read("organizations",company) do
       %{"pk" => pk, "name" => name, "identifier" => ident , "type" => [%{"coding" => [%{"code" => type}]}]} = company
       [%{"display" => disp},%{"code" => code}] = ident
       "#{pk},#{code},#{disp},#{type},#{name}\n"
   end
 
-  def readSubstance(molecule) do
+  def read("substances",molecule) do
       %{"name" => name, "identifier" => [%{"value" => code}]} = molecule
       "#{code},#{name}\n"
   end
 
-  def readProduct(prod) do
+  def read("products",prod) do
       %{"pk" => pk, "identifier" => ident, "type" => %{"coding" => [%{"code" => code}]}, "name" => names} = prod
       [%{"value" => license}] = :lists.filter(fn %{"system" => sys} -> sys == "mpid" end, ident)
       Enum.join(:lists.map(fn x -> %{"productName" => name, "usage" => usage } = x
@@ -109,13 +101,13 @@ defmodule DRLZ do
            "#{pk},#{license},#{code},#{country}-#{name}\n" end, names))
   end
 
-  def readForm(form) do
+  def read("forms",form) do
       %{"pk" => pk, "ingredient" => ingredients} = form
       Enum.join(:lists.map(fn x -> %{"coding" => [%{"display" => display}]} = x
           "#{pk},#{display}\n" end, ingredients))
   end
 
-  def readLicense(license) do
+  def read("licenses",license) do
       %{"pk" => pk, "identifier" => %{"identifier" => [%{"value" => value}]}, "subject" => [%{"reference" => ref}],
         "validityPeriod" => %{"start" => start, "end" => finish}} = license
       pkg = String.replace(ref,"PackagedProductDefinition","package")
@@ -123,7 +115,7 @@ defmodule DRLZ do
       "#{pk},#{value},#{pkg},#{start},#{finish}\n"
   end
 
-  def readPackage(pkg) do
+  def read("packages",pkg) do
       %{"pk" => pk,  "manufacturer" => manu_list, "packageFor" => [%{"reference" => product}], "packaging" => packaging} = pkg
       manu = case manu_list do
          [] -> ""
