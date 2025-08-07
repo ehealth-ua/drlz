@@ -59,11 +59,11 @@ defmodule DRLZ do
          {:ok,{{_,status,_},_headers,body}} ->
              case status do
              _ when status >= 100 and status < 200 -> Logger.error("WebSockets not supported: #{body}") ; 0
-              _ when status >= 500 and status < 600 -> Logger.error("Fatal Error: #{body}") ; 0
+             _ when status >= 500 and status < 600 -> Logger.error("Fatal Error: #{body}") ; 0
              _ when status >= 400 and status < 500 -> Logger.error("Resource not available: #{address}") ; 0
              _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
              _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body)) end
-         {:error,reason} -> raise "Client"
+         {:error,reason} -> raise "Network Error"
       end
   end
 
