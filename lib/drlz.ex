@@ -14,7 +14,7 @@ defmodule DRLZ do
   end
 
   def sync(epoc) do
-      sync_table(epoc, "/fhir/ingredients",                "ingredients")
+      sync_table(epoc, "/fhir/ingredients",                "ingredients", 20)
       sync_table(epoc, "/fhir/package-medicinal-products", "packages")
       sync_table(epoc, "/fhir/medicinal-product",          "products")
       sync_table(epoc, "/fhir/substance-definitions",      "substances")
