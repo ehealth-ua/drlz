@@ -31,15 +31,15 @@ $ tail -f drlz.log
 Copy Data:
 
 ```
-$ ls -l priv/2025-08-06
-total 20320
--rw-r--r-- 1 tonpa tonpa    24503 Aug  7 01:23 forms.csv
--rw-r--r-- 1 tonpa tonpa 14526012 Aug  6 18:38 ingredients.csv
--rw-r--r-- 1 tonpa tonpa   469872 Aug  7 01:12 licenses.csv
--rw-r--r-- 1 tonpa tonpa  1066606 Aug  7 01:26 organizations.csv
--rw-r--r-- 1 tonpa tonpa   733326 Aug  7 00:58 packages.csv
--rw-r--r-- 1 tonpa tonpa  2622337 Aug  6 21:00 products.csv
--rw-r--r-- 1 tonpa tonpa  1349049 Aug  6 19:55 substances.csv
+$ ls -l priv/2025-08-07
+total 31500
+-rw-r--r-- 1 tonpa tonpa  7406625 Aug  7 13:34 forms.csv
+-rw-r--r-- 1 tonpa tonpa 14673534 Aug  7 12:12 ingredients.csv
+-rw-r--r-- 1 tonpa tonpa  2338654 Aug  7 13:05 licenses.csv
+-rw-r--r-- 1 tonpa tonpa  1067546 Aug  7 13:06 organizations.csv
+-rw-r--r-- 1 tonpa tonpa  2799766 Aug  7 12:22 packages.csv
+-rw-r--r-- 1 tonpa tonpa  2611173 Aug  7 12:44 products.csv
+-rw-r--r-- 1 tonpa tonpa  1346909 Aug  7 12:49 substances.csv
 ```
 
 ## Credits
