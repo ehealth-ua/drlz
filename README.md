@@ -2,7 +2,7 @@
 
 [![Hex pm](http://img.shields.io/hexpm/v/drlz.svg?style=flat)](https://hex.pm/packages/drlz)
 
-Даунлоадер FHIR таблиць Державного Реєстру Лікрських Засобів https://drlz.info/api/docs у вигляді CSV файлів на 150 рядків як http://hex.pm пакет.
+Даунлоадер FHIR таблиць Державного Реєстру Лікрських Засобів https://drlz.info/api/docs у вигляді CSV файлів на 300 рядків як http://hex.pm пакет.
 
 ## Features
 
