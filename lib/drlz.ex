@@ -102,10 +102,10 @@ defmodule DRLZ do
                     recs when is_list(recs) ->
                       flat = :lists.foldl(fn x, acc ->
                          acc <> read_dict(x) end, "", recs)
-                      Logger.warn("epoc dict: [#{folder}], table: [#{dict}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
+                      Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       writeDict(flat, name, folder, dict)
                       :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
-                 _ -> Logger.debug("epoc dict: [#{folder}], table: [#{dict}], page: [#{y}], pages: [#{pgs}], window: N/A")
+                 _ -> Logger.debug("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: N/A")
                  end end)
                  :file.delete(dow)
       end
@@ -206,24 +206,13 @@ defmodule DRLZ do
   def norm(x) do x end
 
   def read_dict(dict) do
-
-#     %{"dictionary_version" => 1.0,
-#        "id" => 1,
-#        "is_updated" => false,
-#        "list_deactivated_at" => :null,
-#        "list_modified_at" => :null, "model" => "ReasonsForChange", "related_block" => "ЛЗ", "term_description" => "ЛЗ отримав офіційне реєстраційне посвідчення", "term_local_id" => "ua_62_1", "term_name" => "Видано реєстраційне посвідчення", "term_source_version" => :null, "term_status" => 1}
-
-#     :lists.map(fn {x,y} -> Logger.info("p: #{x}/#{norm{y}") end, Map.to_list(dict))
       %{"id" => no,
         "term_status" => status,
         "term_name" => item_ua,
-#        "is_updated" => y,
         "dictionary_version" => vsn,
         "term_local_id" => item_code,
         "term_source_version" => source_vsn,
         "model" => model,
-#        "related_block" => x,
-#        "term_description" => z,
         "list_deactivated_at" => deactive,
         "list_modified_at" => modified
       } = dict
