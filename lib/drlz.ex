@@ -59,10 +59,10 @@ defmodule DRLZ do
              {:error, _} -> 1
          end
       end
-      %{"total_pages" => pgs, "per_page" => win, "items" => items} = res(api, win)
+      %{"total_pages" => pgs, "per_page" => win, "items" => _items} = res(api, win)
       case restart > pgs do
            true -> :file.delete(dow)
-           _ -> Enum.each(restart..pgs, fn y -> 
+           _ -> Enum.each(restart..pgs, fn y ->
                    case items(api, y, win) do
                     recs when is_list(recs) ->
                       flat = :lists.foldl(fn x, acc ->
@@ -91,18 +91,22 @@ defmodule DRLZ do
       end
       versions = versions(api, win, dict)
       vsn = case :lists.foldl(fn x, acc -> case Map.get(x, "list_deactivated_at", 0) do :null -> [x|acc] ; _ -> acc end end, [], versions) do
-        [last] -> Map.get(last, "version", 1)
+        [last|_] -> Map.get(last, "version", 1)
         [] -> 1
-      end 
+      end
       pgs = pages_dict(api, win, dict, vsn)
       case restart > pgs do
            true -> :file.delete(dow)
-           _ -> Enum.each(restart..pgs, fn y -> 
+           _ -> Enum.each(restart..pgs, fn y ->
                    case items_dict(api, y, win, dict, vsn) do
                     recs when is_list(recs) ->
                       flat = :lists.foldl(fn x, acc ->
                          acc <> read_dict(x) end, "", recs)
                       Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
+                      case y do
+                         1 -> writeDict("no,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
+                         _ -> :skip
+                      end
                       writeDict(flat, name, folder, dict)
                       :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
                  _ -> Logger.debug("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: N/A")
@@ -185,18 +189,30 @@ defmodule DRLZ do
   def norm(x) when is_integer(x) do x end
   def norm(x) do x end
 
+  def fix("") do "null" end
+  def fix(x) do "\"#{x}\"" end
+
   def read_dict(dict) do
-      %{"id" => no,
-        "term_status" => status,
-        "term_name" => item_ua,
-        "dictionary_version" => vsn,
-        "term_local_id" => item_code,
-        "term_source_version" => source_vsn,
-        "model" => model,
-        "list_deactivated_at" => deactive,
-        "list_modified_at" => modified
-      } = dict
-      "#{no},#{item_code},#{vsn},#{item_ua},#{status},#{model}\n"
+      no = fix(Map.get(dict, "id", "null"))
+      vsn = fix(Map.get(dict, "dictionary_version", "null"))
+      model = fix(Map.get(dict, "model", "null"))
+      created_on = fix(Map.get(dict, "created_on", "null"))
+      modified_on = fix(Map.get(dict, "modified_on", "null"))
+      source_term_id = fix(Map.get(dict, "source_term_id", "null"))
+
+      source_vsn = fix(Map.get(dict, "term_source_version", "null"))
+      status = fix(Map.get(dict, "term_status", "null"))
+      item_ua = Map.get(dict, "term_name", "null")
+      term_ua = fix(String.replace(item_ua, "\"", "`"))
+      item_en = fix(Map.get(dict, "term_name_en", "null"))
+      item_code = fix(Map.get(dict, "term_local_id", "null"))
+      manual = fix(Map.get(dict, "is_manually_added", "null"))
+      term_short_ua = fix(Map.get(dict, "term_short_name", "null"))
+      term_short_en = fix(Map.get(dict, "term_short_name_en", "null"))
+      term_desc = String.replace(Map.get(dict, "term_description", "null"), "\n", "")
+      term_desc = fix(String.replace(term_desc, "\"", "`"))
+
+      "#{no},#{vsn},#{model},#{created_on},#{modified_on},#{source_term_id},#{source_vsn},#{status},#{item_ua},#{item_en},#{item_code},#{manual},#{term_short_ua},#{term_short_en},#{term_desc}\n"
   end
 
   def read("dicts", inn) do
