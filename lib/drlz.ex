@@ -16,19 +16,19 @@ defmodule DRLZ do
   def sync(epoc) do
       sync_dicts(epoc, "/v2/dictionary",                   "dicts", 50)
       sync_table(epoc, "/fhir/ingredients",                "ingredients", 50)
-      sync_table(epoc, "/fhir/package-medicinal-products", "packages")
-      sync_table(epoc, "/fhir/medicinal-product",          "products")
-      sync_table(epoc, "/fhir/substance-definitions",      "substances")
-      sync_table(epoc, "/fhir/authorisations",             "licenses")
+      sync_table(epoc, "/fhir/package-medicinal-products", "packages", 20)
+      sync_table(epoc, "/fhir/medicinal-product",          "products", 20)
+      sync_table(epoc, "/fhir/substance-definitions",      "substances", 20)
+      sync_table(epoc, "/fhir/authorisations",             "licenses", 20)
       sync_table(epoc, "/fhir/manufactured-items",         "forms", 50)
-      sync_table(epoc, "/fhir/organization",               "organizations")
+      sync_table(epoc, "/fhir/organization",               "organizations", 50)
   end
 
   def sync_table(folder, api, name, win \\ @page_bulk) do
       dow = "priv/#{folder}/#{name}.dow"
       csv = "priv/#{folder}/#{name}.csv"
       restart = case :file.read_file(dow) do
-         {:ok, bin} -> :erlang.binary_to_integer(bin) + 1
+         {:ok, bin} -> :erlang.binary_to_integer(String.trim(bin)) + 1
          {:error, _} -> case :file.read_file(csv) do
              {:ok, _} -> :infinity
              {:error, _} -> 1
@@ -100,7 +100,7 @@ defmodule DRLZ do
            _ -> Enum.each(restart..pgs, fn y ->
                    case items_dict(api, y, win, dict, vsn) do
                     recs when is_list(recs) ->
-                      Logger.debug("DEBUG api: #{api}, y: #{y}, win: #{win}, dict: #{dict}, vsn: #{vsn}")
+#                     Logger.debug("DEBUG api: #{api}, y: #{y}, win: #{win}, dict: #{dict}, vsn: #{vsn}")
                       flat = :lists.foldl(fn x, acc ->
                          acc <> read_dict(x) end, "", recs)
                       Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
@@ -120,8 +120,8 @@ defmodule DRLZ do
   def pages(url,       win \\ @page_bulk) do retrieve(url, win, 1, fn res -> Map.get(res, "pages", 0)  end) end
   def versions(url,    win \\ @page_bulk, dict) do retrieve_dict_versions(url, win, 1, fn res -> Map.get(res, "items", 0)  end, dict) end
   def items(url, page, win \\ @page_bulk) do retrieve(url, win, page, fn res -> Map.get(res, "items", []) end) end
-  def items_dict(url, page, win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, page, fn res -> Map.get(res, "items", []) end, name, fix_version(name,vsn)) end
-  def pages_dict(url, win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, 1, fn res -> Map.get(res, "total_pages", 0) end, name, vsn) end
+  def items_dict(url, page, win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, page, fn res -> Map.get(res, "items",      []) end, name, fix_version(name,vsn)) end
+  def pages_dict(url,       win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, 1,    fn res -> Map.get(res, "total_pages", 0) end, name, fix_version(name,vsn)) end
 
   def fix_version("unitsofmeasurement", vsn) do vsn - 1 end
   def fix_version("substancepilot",     vsn) do vsn - 1 end
@@ -220,12 +220,13 @@ defmodule DRLZ do
       term_desc = String.replace(Map.get(dict, "term_description", "null"), "\n", "")
       term_desc = fix(String.replace(term_desc, "\"", "`"))
 
-      "#{no},#{vsn},#{model},#{created_on},#{modified_on},#{source_term_id},#{source_vsn},#{status},#{item_ua},#{item_en},#{item_code},#{manual},#{term_short_ua},#{term_short_en},#{term_desc}\n"
+      "#{no},#{vsn},#{model},#{created_on},#{modified_on},#{source_term_id},#{source_vsn},#{status}," <>
+      "#{item_ua},#{item_en},#{item_code},#{manual},#{term_short_ua},#{term_short_en},#{term_desc}\n"
   end
 
   def read("dicts", inn) do
       %{"dictionary" => key, "list_name_en" => en, "list_name_ua" => ua, "list_local_version" => vsn, "list_source_id" => id} = inn
-      "#{id},#{key},#{en},#{ua},#{vsn},#{}\n"
+      "#{fix(id)},#{fix(key)},#{fix(en)},#{fix(ua)},#{fix(vsn)}\n"
   end
 
   def read("version", inn) do
@@ -236,21 +237,24 @@ defmodule DRLZ do
 
   def read("ingredients",inn) do
       %{"for" => references, "pk" => pk, "substance" => %{"coding" => [%{"code" => code, "display" => display, "system" => _system}]}} = inn
+      display = fix(String.replace(display, "\"", "`"))
       man = Enum.join(Enum.map(references, & &1["reference"]), ",")
       man = String.replace(man, "ManufacturedItemDefinition", "")
       man = String.replace(man, "MedicinalProductDefinition", "")
-      "#{pk},#{code},#{display},#{man}\n"
+      man = fix(String.replace(man, "\"", "`"))
+      "#{pk},#{fix(code)},#{display},#{man}\n"
   end
 
   def read("organizations",company) do
       %{"pk" => pk, "name" => name, "identifier" => ident , "type" => [%{"coding" => [%{"code" => type}]}]} = company
       [%{"display" => disp},%{"code" => code}] = ident
-      "#{pk},#{code},#{disp},#{type},#{name}\n"
+      name = fix(String.replace(name, "\"", "`"))
+      "#{pk},#{fix(code)},#{fix(disp)},#{fix(type)},#{name}\n"
   end
 
   def read("substances",molecule) do
       %{"name" => name, "identifier" => [%{"value" => code}]} = molecule
-      "#{code},#{name}\n"
+      "#{code},#{fix(name)}\n"
   end
 
   def read("products",prod) do
@@ -258,13 +262,14 @@ defmodule DRLZ do
       [%{"value" => license}] = :lists.filter(fn %{"system" => sys} -> sys == "mpid" end, ident)
       Enum.join(:lists.map(fn x -> %{"productName" => name, "usage" => usage } = x
            %{"language" => %{"coding" => [%{"display" => country}]}} = hd(usage)
-           "#{pk},#{license},#{code},#{country}-#{name}\n" end, names))
+           "#{pk},#{fix(license)},#{fix(code)},#{fix(country)},#{fix(name)}\n" end, names))
   end
 
   def read("forms",form) do
       %{"pk" => pk, "ingredient" => ingredients} = form
       Enum.join(:lists.map(fn x -> %{"coding" => [%{"display" => display}]} = x
-          "#{pk},#{display}\n" end, ingredients))
+      display = fix(String.replace(display, "\"", "`"))
+      "#{pk},#{display}\n" end, ingredients))
   end
 
   def read("licenses",license) do
@@ -272,7 +277,7 @@ defmodule DRLZ do
         "validityPeriod" => %{"start" => start, "end" => finish}} = license
       pkg = String.replace(ref,"PackagedProductDefinition","package")
       pkg = String.replace(pkg,"MedicinalProductDefinition","product")
-      "#{pk},#{value},#{pkg},#{start},#{finish}\n"
+      "#{pk},#{fix(value)},#{fix(pkg)},#{fix(start)},#{fix(finish)}\n"
   end
 
   def read("packages",pkg) do
@@ -291,7 +296,8 @@ defmodule DRLZ do
                              [_,f] = String.split(reference,"/")
                              f
            end end, "", packaging)
-      "#{pk},#{prod},#{form},#{man}\n"
+      man = fix(String.replace(man, "\"", "`"))
+      "#{pk},#{fix(prod)},#{fix(form)},#{man}\n"
   end
 
   def writeFile(record, name, folder) do
