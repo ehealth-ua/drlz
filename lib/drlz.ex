@@ -100,6 +100,7 @@ defmodule DRLZ do
            _ -> Enum.each(restart..pgs, fn y ->
                    case items_dict(api, y, win, dict, vsn) do
                     recs when is_list(recs) ->
+                      Logger.debug("DEBUG api: #{api}, y: #{y}, win: #{win}, dict: #{dict}, vsn: #{vsn}")
                       flat = :lists.foldl(fn x, acc ->
                          acc <> read_dict(x) end, "", recs)
                       Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
@@ -119,8 +120,12 @@ defmodule DRLZ do
   def pages(url,       win \\ @page_bulk) do retrieve(url, win, 1, fn res -> Map.get(res, "pages", 0)  end) end
   def versions(url,    win \\ @page_bulk, dict) do retrieve_dict_versions(url, win, 1, fn res -> Map.get(res, "items", 0)  end, dict) end
   def items(url, page, win \\ @page_bulk) do retrieve(url, win, page, fn res -> Map.get(res, "items", []) end) end
-  def items_dict(url, page, win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, page, fn res -> Map.get(res, "items", []) end, name, vsn) end
+  def items_dict(url, page, win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, page, fn res -> Map.get(res, "items", []) end, name, fix_version(name,vsn)) end
   def pages_dict(url, win \\ @page_bulk, name, vsn) do retrieve_dict(url, win, 1, fn res -> Map.get(res, "total_pages", 0) end, name, vsn) end
+
+  def fix_version("unitsofmeasurement", vsn) do vsn - 1 end
+  def fix_version("substancepilot",     vsn) do vsn - 1 end
+  def fix_version(_, vsn)                    do vsn end
 
   def retrieve(url, win, page, fun) do
       bearer   = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
@@ -203,12 +208,15 @@ defmodule DRLZ do
       source_vsn = fix(Map.get(dict, "term_source_version", "null"))
       status = fix(Map.get(dict, "term_status", "null"))
       item_ua = Map.get(dict, "term_name", "null")
-      term_ua = fix(String.replace(item_ua, "\"", "`"))
-      item_en = fix(Map.get(dict, "term_name_en", "null"))
+      item_ua = fix(String.replace(item_ua, "\"", "`"))
+      item_en = Map.get(dict, "term_name_en", "null")
+      item_en = fix(String.replace(item_en, "\"", "`"))
       item_code = fix(Map.get(dict, "term_local_id", "null"))
       manual = fix(Map.get(dict, "is_manually_added", "null"))
-      term_short_ua = fix(Map.get(dict, "term_short_name", "null"))
-      term_short_en = fix(Map.get(dict, "term_short_name_en", "null"))
+      term_short_ua = Map.get(dict, "term_short_name", "null")
+      term_short_ua = fix(String.replace(term_short_ua, "\"", "`"))
+      term_short_en = Map.get(dict, "term_short_name_en", "null")
+      term_short_en = fix(String.replace(term_short_en, "\"", "`"))
       term_desc = String.replace(Map.get(dict, "term_description", "null"), "\n", "")
       term_desc = fix(String.replace(term_desc, "\"", "`"))
 
