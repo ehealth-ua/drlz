@@ -4,7 +4,7 @@ defmodule MRS.Mixfile do
   def project do
     [
       app: :drlz,
-      version: "0.8.9",
+      version: "0.8.28",
       description: "ESOZ DEC DRLZ SYNC",
       xref: [exclude: [:crypto]],
       package: package(),
