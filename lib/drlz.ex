@@ -102,10 +102,10 @@ defmodule DRLZ do
                     recs when is_list(recs) ->
 #                     Logger.debug("DEBUG api: #{api}, y: #{y}, win: #{win}, dict: #{dict}, vsn: #{vsn}")
                       flat = :lists.foldl(fn x, acc ->
-                         acc <> read_dict(x) end, "", recs)
+                         acc <> read_dict(dict, x) end, "", recs)
                       Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       case y do
-                         1 -> writeDict("no,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
+                         1 -> writeDict("no,atc,atc_parent,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
                          _ -> :skip
                       end
                       writeDict(flat, name, folder, dict)
@@ -197,13 +197,16 @@ defmodule DRLZ do
   def fix("") do "null" end
   def fix(x) do "\"#{x}\"" end
 
-  def read_dict(dict) do
+  def read_dict(name, dict) do
       no = fix(Map.get(dict, "id", "null"))
       vsn = fix(Map.get(dict, "dictionary_version", "null"))
       model = fix(Map.get(dict, "model", "null"))
       created_on = fix(Map.get(dict, "created_on", "null"))
       modified_on = fix(Map.get(dict, "modified_on", "null"))
       source_term_id = fix(Map.get(dict, "source_term_id", "null"))
+
+      code_atc = fix(Map.get(dict, "code_atc", "null"))
+      parent_code_atc = fix(Map.get(dict, "parent_code_atc", "null"))
 
       source_vsn = fix(Map.get(dict, "term_source_version", "null"))
       status = fix(Map.get(dict, "term_status", "null"))
@@ -220,7 +223,7 @@ defmodule DRLZ do
       term_desc = String.replace(Map.get(dict, "term_description", "null"), "\n", "")
       term_desc = fix(String.replace(term_desc, "\"", "`"))
 
-      "#{no},#{vsn},#{model},#{created_on},#{modified_on},#{source_term_id},#{source_vsn},#{status}," <>
+      "#{no},#{code_atc},#{parent_code_atc},#{vsn},#{model},#{created_on},#{modified_on},#{source_term_id},#{source_vsn},#{status}," <>
       "#{item_ua},#{item_en},#{item_code},#{manual},#{term_short_ua},#{term_short_en},#{term_desc}\n"
   end
 
