@@ -15,13 +15,13 @@ defmodule DRLZ do
 
   def sync(epoc) do
       sync_dicts(epoc, "/v2/dictionary",                   "dicts", 50)
-      sync_table(epoc, "/fhir/ingredients",                "ingredients", 50)
-      sync_table(epoc, "/fhir/package-medicinal-products", "packages", 20)
-      sync_table(epoc, "/fhir/medicinal-product",          "products", 20)
-      sync_table(epoc, "/fhir/substance-definitions",      "substances", 20)
-      sync_table(epoc, "/fhir/authorisations",             "licenses", 20)
-      sync_table(epoc, "/fhir/manufactured-items",         "forms", 50)
-      sync_table(epoc, "/fhir/organization",               "organizations", 50)
+#      sync_table(epoc, "/fhir/ingredients",                "ingredients", 50)
+#      sync_table(epoc, "/fhir/package-medicinal-products", "packages", 20)
+#      sync_table(epoc, "/fhir/medicinal-product",          "products", 20)
+#      sync_table(epoc, "/fhir/substance-definitions",      "substances", 20)
+#      sync_table(epoc, "/fhir/authorisations",             "licenses", 20)
+#      sync_table(epoc, "/fhir/manufactured-items",         "forms", 50)
+#      sync_table(epoc, "/fhir/organization",               "organizations", 50)
   end
 
   def sync_table(folder, api, name, win \\ @page_bulk) do
@@ -105,7 +105,10 @@ defmodule DRLZ do
                          acc <> read_dict(dict, x) end, "", recs)
                       Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       case y do
-                         1 -> writeDict("no,atc,atc_parent,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
+                         1 -> case dict do
+                                   "atc" -> writeDict("no,atc,atc_parent,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
+                                       _ -> writeDict("no,PK,atc_parent,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
+                              end
                          _ -> :skip
                       end
                       writeDict(flat, name, folder, dict)
@@ -197,7 +200,27 @@ defmodule DRLZ do
   def fix("") do "null" end
   def fix(x) do "\"#{x}\"" end
 
+#                                <<"created_on">> => <<"2024-09-20T12:19:52.215">>,
+#                                <<"dictionary_version">> => 2.0,
+#                                <<"id">> => 604,
+#                                <<"is_manually_added">> => false,
+#                                <<"list_deactivated_at">> => null,
+#                                <<"list_modified_at">> => null,
+#                                <<"model">> => <<"PharmaceuticalDoseForm">>,
+#                                <<"modified_on">> => <<"2024-10-18T13:50:33.587">>,
+#                                <<"source_term_id">> => <<"100000116147">>,
+#                                <<"term_description">> => <<>>,
+#                                <<"term_description_en">> => <<>>,
+#                                <<"term_local_id">> => <<"ua_33_604">>,
+#                                <<"term_name">> =>
+#                                <<"term_name_en">> => <<"Concentrate for spray emulsion">>,
+#                                <<"term_short_name">> => <<>>,
+#                                <<"term_short_name_en">> => <<>>,
+#                                <<"term_source_version">> => <<"81">>,
+#                                <<"term_status">> => 1}
+
   def read_dict(name, dict) do
+
       no = fix(Map.get(dict, "id", "null"))
       vsn = fix(Map.get(dict, "dictionary_version", "null"))
       model = fix(Map.get(dict, "model", "null"))
@@ -205,7 +228,14 @@ defmodule DRLZ do
       modified_on = fix(Map.get(dict, "modified_on", "null"))
       source_term_id = fix(Map.get(dict, "source_term_id", "null"))
 
-      code_atc = fix(Map.get(dict, "code_atc", "null"))
+      code_atc =  case name do
+          "atc" -> fix(Map.get(dict, "code_atc", "null"))
+          "pharmaceuticaldoseform" ->
+             Logger.info("Trace Dose Form Dict: #{:io_lib.format('~p: ~p',[name,dict])}")
+              fix(Map.get(dict, "PK", "null"))
+          _ -> fix(Map.get(dict, "PK", "null"))
+      end
+
       parent_code_atc = fix(Map.get(dict, "parent_code_atc", "null"))
 
       source_vsn = fix(Map.get(dict, "term_source_version", "null"))
