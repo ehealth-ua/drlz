@@ -15,13 +15,13 @@ defmodule DRLZ do
 
   def sync(epoc) do
       sync_dicts(epoc, "/v2/dictionary",                   "dicts", 50)
-#      sync_table(epoc, "/fhir/ingredients",                "ingredients", 50)
-#      sync_table(epoc, "/fhir/package-medicinal-products", "packages", 20)
-#      sync_table(epoc, "/fhir/medicinal-product",          "products", 20)
-#      sync_table(epoc, "/fhir/substance-definitions",      "substances", 20)
-#      sync_table(epoc, "/fhir/authorisations",             "licenses", 20)
-#      sync_table(epoc, "/fhir/manufactured-items",         "forms", 50)
-#      sync_table(epoc, "/fhir/organization",               "organizations", 50)
+      sync_table(epoc, "/fhir/package-medicinal-products", "packages", 50)
+      sync_table(epoc, "/fhir/medicinal-product",          "products", 50)
+      sync_table(epoc, "/fhir/ingredients",                "ingredients", 50)
+      sync_table(epoc, "/fhir/substance-definitions",      "substances", 20)
+      sync_table(epoc, "/fhir/authorisations",             "licenses", 20)
+      sync_table(epoc, "/fhir/manufactured-items",         "forms", 50)
+      sync_table(epoc, "/fhir/organization",               "organizations", 50)
   end
 
   def sync_table(folder, api, name, win \\ @page_bulk) do
@@ -314,6 +314,7 @@ defmodule DRLZ do
   end
 
   def read("packages",pkg) do
+      IO.inspect [pkg]
       %{"pk" => pk,  "manufacturer" => manu_list, "packageFor" => [%{"reference" => product}], "packaging" => packaging} = pkg
       manu = case manu_list do
          [] -> ""

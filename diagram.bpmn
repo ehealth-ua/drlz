@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0p1ozj9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.12.0">
+  <bpmn:collaboration id="Collaboration_19ov1up">
+    <bpmn:participant id="Participant_1o0zd1h" name="Декжавний Екпертний Центр" processRef="Process_1q2xx59" />
+    <bpmn:participant id="Participant_0ibnsy5" name="ЕСОЗ" processRef="Process_1rn73jf" />
+    <bpmn:messageFlow id="Flow_1e113zc" sourceRef="Activity_1rkdycg" targetRef="Activity_1q9tpcf" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1q2xx59" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_0x5i7b0">
+      <bpmn:outgoing>Flow_1vvhazq</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_1rkdycg" name="ДРЛЗ API">
+      <bpmn:incoming>Flow_1vvhazq</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1vvhazq" sourceRef="StartEvent_0x5i7b0" targetRef="Activity_1rkdycg" />
+  </bpmn:process>
+  <bpmn:process id="Process_1rn73jf">
+    <bpmn:task id="Activity_1q9tpcf" name="ДРЛЗ Інтеграційний Сервіс">
+      <bpmn:outgoing>Flow_14szwba</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1samimc" name="CSV, Dataset">
+      <bpmn:incoming>Flow_14szwba</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jwh1rj</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1e88xcb" name="FHIR Medicinial Products, ATC, Ingredients">
+      <bpmn:incoming>Flow_0jwh1rj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0t0rtr9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1raebki">
+      <bpmn:incoming>Flow_0t0rtr9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_14szwba" sourceRef="Activity_1q9tpcf" targetRef="Activity_1samimc" />
+    <bpmn:sequenceFlow id="Flow_0jwh1rj" sourceRef="Activity_1samimc" targetRef="Activity_1e88xcb" />
+    <bpmn:sequenceFlow id="Flow_0t0rtr9" sourceRef="Activity_1e88xcb" targetRef="Event_1raebki" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_19ov1up">
+      <bpmndi:BPMNShape id="Participant_1o0zd1h_di" bpmnElement="Participant_1o0zd1h" isHorizontal="true">
+        <dc:Bounds x="156" y="40" width="724" height="250" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_0x5i7b0">
+        <dc:Bounds x="206" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rkdycg_di" bpmnElement="Activity_1rkdycg">
+        <dc:Bounds x="300" y="60" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1vvhazq_di" bpmnElement="Flow_1vvhazq">
+        <di:waypoint x="242" y="100" />
+        <di:waypoint x="300" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_0ibnsy5_di" bpmnElement="Participant_0ibnsy5" isHorizontal="true">
+        <dc:Bounds x="156" y="290" width="724" height="250" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1q9tpcf_di" bpmnElement="Activity_1q9tpcf">
+        <dc:Bounds x="300" y="370" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1samimc_di" bpmnElement="Activity_1samimc">
+        <dc:Bounds x="450" y="370" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1e88xcb_di" bpmnElement="Activity_1e88xcb">
+        <dc:Bounds x="600" y="370" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1raebki_di" bpmnElement="Event_1raebki">
+        <dc:Bounds x="762" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_14szwba_di" bpmnElement="Flow_14szwba">
+        <di:waypoint x="400" y="410" />
+        <di:waypoint x="450" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jwh1rj_di" bpmnElement="Flow_0jwh1rj">
+        <di:waypoint x="550" y="410" />
+        <di:waypoint x="600" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t0rtr9_di" bpmnElement="Flow_0t0rtr9">
+        <di:waypoint x="700" y="410" />
+        <di:waypoint x="762" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e113zc_di" bpmnElement="Flow_1e113zc">
+        <di:waypoint x="350" y="140" />
+        <di:waypoint x="350" y="370" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
