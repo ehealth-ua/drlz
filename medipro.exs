@@ -19,7 +19,7 @@ defmodule Medipro do
   end
 
   def header do
-    "mpid,pmsid,inn_ua,inn_en,language,name,package_pcid,package_status,package_description,package_legal_status\n"
+    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,language,name,package_pcid,package_status,package_description,package_legal_status,release_form,manufacturer,package_qty\n"
   end
 
   def read_product(prod) do
@@ -30,14 +30,12 @@ defmodule Medipro do
     inn_ua = Enum.map_join(inns, "; ", &Map.get(&1, "term_name", ""))
     inn_en = Enum.map_join(inns, "; ", &Map.get(&1, "term_name_en", ""))
 
+    atc_code = Enum.join(Map.get(prod, "atc", []), "; ")
+    reg_num = get_v(prod, ["authorisation", "number"])
+    exp_date = get_v(prod, ["authorisation", "validityPeriod", "end"])
+
     names = Map.get(prod, "names", [])
     packages = Map.get(prod, "packages", [])
-
-    # We want to cross join names and packages for this CSV format
-    # OR we can just list names then packages.
-    # The user's provided snippet (DRLZ.read("products", prod)) suggests one row per name.
-    # Extending to "whole JSON structure" implies we should probably include package info too.
-    # To keep it tabular, we'll emit a row for each name-package combination.
 
     for name_entry <- names, package_entry <- packages do
       name = Map.get(name_entry, "name", "")
@@ -48,8 +46,43 @@ defmodule Medipro do
       desc = Map.get(package_entry, "description", "")
       legal = get_v(package_entry, ["legalStatusOfSupply", "term_name"])
 
-      "#{fix(mpid)},#{fix(pmsid)},#{fix(inn_ua)},#{fix(inn_en)},#{fix(lang)},#{fix(name)},#{fix(pcid)},#{fix(status)},#{fix(desc)},#{fix(legal)}\n"
+      # Extract items and manufacturers (taking the first one for simplicity if multiple)
+      items = flatten_items(Map.get(package_entry, "packageItemContainer", []))
+
+      {release_form, package_qty} =
+        case items do
+          [item | _] ->
+            form = get_v(item, ["manufacturedDoseForm", "term_name"])
+            qty_val = get_v(item, ["count", "value"])
+            qty_unit = get_v(item, ["count", "unit"])
+            {form, "#{qty_val} #{qty_unit}"}
+
+          [] ->
+            {"", ""}
+        end
+
+      manufacturers = Map.get(package_entry, "manufacturers", [])
+
+      manufacturer =
+        case manufacturers do
+          [m | _] -> Map.get(m, "name", "")
+          [] -> ""
+        end
+
+      "#{fix(mpid)},#{fix(pmsid)},#{fix(inn_ua)},#{fix(inn_en)},#{fix(atc_code)},#{fix(reg_num)},#{fix(exp_date)}," <>
+        "#{fix(lang)},#{fix(name)},#{fix(pcid)},#{fix(status)},#{fix(desc)},#{fix(legal)}," <>
+        "#{fix(release_form)},#{fix(manufacturer)},#{fix(package_qty)}\n"
     end
+  end
+
+  defp flatten_items([]), do: []
+
+  defp flatten_items(containers) when is_list(containers) do
+    Enum.flat_map(containers, fn c ->
+      items = Map.get(c, "manufacturedItems", [])
+      children = Map.get(c, "children", [])
+      items ++ flatten_items(children)
+    end)
   end
 
   def get_v(:null, _), do: ""
