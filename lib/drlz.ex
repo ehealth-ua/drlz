@@ -200,25 +200,6 @@ defmodule DRLZ do
   def fix("") do "null" end
   def fix(x) do "\"#{x}\"" end
 
-#                                <<"created_on">> => <<"2024-09-20T12:19:52.215">>,
-#                                <<"dictionary_version">> => 2.0,
-#                                <<"id">> => 604,
-#                                <<"is_manually_added">> => false,
-#                                <<"list_deactivated_at">> => null,
-#                                <<"list_modified_at">> => null,
-#                                <<"model">> => <<"PharmaceuticalDoseForm">>,
-#                                <<"modified_on">> => <<"2024-10-18T13:50:33.587">>,
-#                                <<"source_term_id">> => <<"100000116147">>,
-#                                <<"term_description">> => <<>>,
-#                                <<"term_description_en">> => <<>>,
-#                                <<"term_local_id">> => <<"ua_33_604">>,
-#                                <<"term_name">> =>
-#                                <<"term_name_en">> => <<"Concentrate for spray emulsion">>,
-#                                <<"term_short_name">> => <<>>,
-#                                <<"term_short_name_en">> => <<>>,
-#                                <<"term_source_version">> => <<"81">>,
-#                                <<"term_status">> => 1}
-
   def read_dict(name, dict) do
 
       no = fix(Map.get(dict, "id", "null"))
