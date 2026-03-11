@@ -56,7 +56,7 @@ defmodule Medipro do
             id = get_v(item, ["manufacturedDoseForm", "id"])
             qty_val = get_v(item, ["count", "value"])
             qty_unit = get_v(item, ["count", "unit"])
-            {form, id, "#{qty_val} #{qty_unit}"}
+            {form, id, "#{format_num(qty_val)} #{qty_unit}"}
 
           [] ->
             {"", "", ""}
@@ -103,14 +103,23 @@ defmodule Medipro do
   def fix(nil), do: "\"\""
 
   def fix(x) when is_binary(x) do
-    sanitized = x |> String.trim() |> String.replace(~r/[\r\n]+/, " ")
+    sanitized = x |> String.trim() |> String.replace(~r/[[:cntrl:]]+/u, " ")
     escaped = String.replace(sanitized, "\"", "`")
     "\"#{escaped}\""
+  end
+
+  def fix(x) when is_number(x) do
+    "\"#{format_num(x)}\""
   end
 
   def fix(x) do
     "\"#{x}\""
   end
+
+  defp format_num(x) when is_float(x) do
+    if x == Float.round(x), do: "#{trunc(x)}", else: "#{x}"
+  end
+  defp format_num(x), do: "#{x}"
 end
 
 # CLI Entry point
