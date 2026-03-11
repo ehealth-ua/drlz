@@ -39,7 +39,7 @@ defmodule DRLZ do
            true -> :file.delete(dow)
            _ ->  Enum.each(restart..pgs, fn y -> case items(api, y, win) do
                  recs when is_list(recs) ->
-                      Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
+                      Logger.warning("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       flat = :lists.foldl(fn x, acc -> acc <> read(name, x) end, "", recs)
                       writeFile(flat, name, folder)
                       :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
@@ -69,7 +69,7 @@ defmodule DRLZ do
                         dict = Map.get(x, "dictionary")
                         sync_dict(folder, api, name, win, dict)
                         acc <> read("dicts", x) end, "", recs)
-                      Logger.warn("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
+                      Logger.warning("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       writeFile(flat, name, folder)
                       :file.write_file(dow, Integer.to_string(y), [:raw, :binary])
                  _ -> Logger.debug("epoc: [#{folder}], table: [#{name}], page: [#{y}], pages: [#{pgs}], window: N/A")
@@ -103,7 +103,7 @@ defmodule DRLZ do
 #                     Logger.debug("DEBUG api: #{api}, y: #{y}, win: #{win}, dict: #{dict}, vsn: #{vsn}")
                       flat = :lists.foldl(fn x, acc ->
                          acc <> read_dict(dict, x) end, "", recs)
-                      Logger.warn("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
+                      Logger.warning("epoc dict: [#{folder}], dict: [#{dict}], vsn: [#{vsn}], page: [#{y}], pages: [#{pgs}], window: [#{length(recs)}]")
                       case y do
                          1 -> case dict do
                                    "atc" -> writeDict("no,atc,atc_parent,vsn,model,created_on,modified_on,source_term_id,source_vsn,status,item_ua,item_en,item_code,manual,term_short_ua,term_short_en,term_desc\n", name, folder, dict)
@@ -133,9 +133,9 @@ defmodule DRLZ do
   def retrieve(url, win, page, fun) do
       bearer   = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
       endpoint = :application.get_env(:drlz, :endpoint, "https://drlz.info/api")
-      accept   = 'application/json'
-      headers  = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
-      address  = '#{endpoint}#{url}?page=#{page}&limit=#{win}'
+      accept   = ~c"application/json"
+      headers  = [{~c"Authorization",~c"Bearer " ++ bearer},{~c"accept",accept}]
+      address  = ~c"#{endpoint}#{url}?page=#{page}&limit=#{win}"
       case :httpc.request(:get, {address, headers}, [{:timeout,:application.get_env(:drlz,:timeout,100000)},verify()], [{:body_format,:binary}]) do
          {:ok,{{_,status,_},_headers,body}} ->
              case status do
@@ -145,7 +145,7 @@ defmodule DRLZ do
              _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
              _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body)) end
          {:error,reason} ->
-             Logger.error("Network Error: #{:io_lib.format('~p',[reason])}")
+             Logger.error("Network Error: #{:io_lib.format(~c"~p",[reason])}")
              raise "Network Error" # crash
       end
   end
@@ -153,9 +153,9 @@ defmodule DRLZ do
   def retrieve_dict_versions(url, win, page, fun, dict) do
       bearer   = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
       endpoint = :application.get_env(:drlz, :endpoint, "https://drlz.info/api")
-      accept   = 'application/json'
-      headers  = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
-      address  = '#{endpoint}#{url}/#{dict}/versions/?page=#{page}&per_page=#{win}'
+      accept   = ~c"application/json"
+      headers  = [{~c"Authorization",~c"Bearer " ++ bearer},{~c"accept",accept}]
+      address  = ~c"#{endpoint}#{url}/#{dict}/versions/?page=#{page}&per_page=#{win}"
       case :httpc.request(:get, {address, headers}, [{:timeout,:application.get_env(:drlz,:timeout,100000)},verify()], [{:body_format,:binary}]) do
          {:ok,{{_,status,_},_headers,body}} ->
              case status do
@@ -165,7 +165,7 @@ defmodule DRLZ do
              _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
              _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body)) end
          {:error,reason} ->
-             Logger.error("Network Error: #{:io_lib.format('~p',[reason])}")
+             Logger.error("Network Error: #{:io_lib.format(~c"~p",[reason])}")
              raise "Network Error" # crash
       end
   end
@@ -173,9 +173,9 @@ defmodule DRLZ do
   def retrieve_dict(url, win, page, fun, dict, vsn) do
       bearer   = :erlang.binary_to_list(:application.get_env(:drlz, :bearer, ""))
       endpoint = :application.get_env(:drlz, :endpoint, "https://drlz.info/api")
-      accept   = 'application/json'
-      headers  = [{'Authorization','Bearer ' ++ bearer},{'accept',accept}]
-      address  = '#{endpoint}#{url}/#{dict}/active?dictionary_version=#{vsn}&page=#{page}&per_page=#{win}'
+      accept   = ~c"application/json"
+      headers  = [{~c"Authorization",~c"Bearer " ++ bearer},{~c"accept",accept}]
+      address  = ~c"#{endpoint}#{url}/#{dict}/active?dictionary_version=#{vsn}&page=#{page}&per_page=#{win}"
       case :httpc.request(:get, {address, headers}, [{:timeout,:application.get_env(:drlz,:timeout,100000)},verify()], [{:body_format,:binary}]) do
          {:ok,{{_,status,_},_headers,body}} ->
              case status do
@@ -185,7 +185,7 @@ defmodule DRLZ do
              _ when status >= 300 and status < 400 -> Logger.error("Go away: #{body}") ; 0
              _ when status >= 200 and status < 300 -> fun.(:jsone.decode(body)) end
          {:error,reason} ->
-             Logger.error("Network Error: #{:io_lib.format('~p',[reason])}")
+             Logger.error("Network Error: #{:io_lib.format(~c"~p",[reason])}")
              raise "Network Error" # crash
       end
   end
@@ -231,7 +231,7 @@ defmodule DRLZ do
       code_atc =  case name do
           "atc" -> fix(Map.get(dict, "code_atc", "null"))
           "pharmaceuticaldoseform" ->
-             Logger.info("Trace Dose Form Dict: #{:io_lib.format('~p: ~p',[name,dict])}")
+             Logger.info("Trace Dose Form Dict: #{:io_lib.format(~c"~p: ~p",[name,dict])}")
               fix(Map.get(dict, "PK", "null"))
           _ -> fix(Map.get(dict, "PK", "null"))
       end

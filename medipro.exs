@@ -19,7 +19,7 @@ defmodule Medipro do
   end
 
   def header do
-    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,language,name,package_pcid,package_status,package_description,package_legal_status,release_form,manufacturer,package_qty\n"
+    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,language,name,package_pcid,package_status,package_description,package_legal_status,release_form,manufactured_dose_form,manufacturer,package_qty\n"
   end
 
   def read_product(prod) do
@@ -71,7 +71,7 @@ defmodule Medipro do
 
       "#{fix(mpid)},#{fix(pmsid)},#{fix(inn_ua)},#{fix(inn_en)},#{fix(atc_code)},#{fix(reg_num)},#{fix(exp_date)}," <>
         "#{fix(lang)},#{fix(name)},#{fix(pcid)},#{fix(status)},#{fix(desc)},#{fix(legal)}," <>
-        "#{fix(release_form)},#{fix(manufacturer)},#{fix(package_qty)}\n"
+        "#{fix(release_form)},#{fix(release_form)},#{fix(manufacturer)},#{fix(package_qty)}\n"
     end
   end
 
