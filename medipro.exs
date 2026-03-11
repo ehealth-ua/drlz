@@ -19,7 +19,7 @@ defmodule Medipro do
   end
 
   def header do
-    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,language,name,package_pcid,package_status,package_description,package_legal_status,release_form,manufactured_dose_form_id,manufacturer,package_qty\n"
+    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,name_ua,name_en,package_pcid,package_status,package_description,package_legal_status,release_form,manufactured_dose_form_id,manufacturer,package_qty\n"
   end
 
   def read_product(prod) do
@@ -35,12 +35,12 @@ defmodule Medipro do
     exp_date = get_v(prod, ["authorisation", "validityPeriod", "end"])
 
     names = Map.get(prod, "names", [])
+    name_ua = Enum.find_value(names, "", fn n -> if get_v(n, ["language", "term_name"]) == "Українська", do: Map.get(n, "name", "") end)
+    name_en = Enum.find_value(names, "", fn n -> if get_v(n, ["language", "term_name"]) == "Англійська", do: Map.get(n, "name", "") end)
+
     packages = Map.get(prod, "packages", [])
 
-    for name_entry <- names, package_entry <- packages do
-      name = Map.get(name_entry, "name", "")
-      lang = get_v(name_entry, ["language", "term_name"])
-
+    for package_entry <- packages do
       pcid = Map.get(package_entry, "pcid", "")
       status = Map.get(package_entry, "status", "")
       desc = Map.get(package_entry, "description", "")
@@ -71,7 +71,7 @@ defmodule Medipro do
         end
 
       "#{fix(mpid)},#{fix(pmsid)},#{fix(inn_ua)},#{fix(inn_en)},#{fix(atc_code)},#{fix(reg_num)},#{fix(exp_date)}," <>
-        "#{fix(lang)},#{fix(name)},#{fix(pcid)},#{fix(status)},#{fix(desc)},#{fix(legal)}," <>
+        "#{fix(name_ua)},#{fix(name_en)},#{fix(pcid)},#{fix(status)},#{fix(desc)},#{fix(legal)}," <>
         "#{fix(release_form)},#{fix(dose_form_id)},#{fix(manufacturer)},#{fix(package_qty)}\n"
     end
   end
