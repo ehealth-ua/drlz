@@ -103,7 +103,8 @@ defmodule Medipro do
   def fix(nil), do: "\"\""
 
   def fix(x) when is_binary(x) do
-    escaped = String.replace(x, "\"", "`")
+    sanitized = x |> String.trim() |> String.replace(~r/[\r\n]+/, " ")
+    escaped = String.replace(sanitized, "\"", "`")
     "\"#{escaped}\""
   end
 
