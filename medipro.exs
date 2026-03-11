@@ -19,7 +19,7 @@ defmodule Medipro do
   end
 
   def header do
-    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,language,name,package_pcid,package_status,package_description,package_legal_status,release_form,manufactured_dose_form,manufacturer,package_qty\n"
+    "mpid,pmsid,inn_ua,inn_en,atc_code,reg_num,exp_date,language,name,package_pcid,package_status,package_description,package_legal_status,release_form,manufactured_dose_form_id,manufacturer,package_qty\n"
   end
 
   def read_product(prod) do
@@ -49,16 +49,17 @@ defmodule Medipro do
       # Extract items and manufacturers (taking the first one for simplicity if multiple)
       items = flatten_items(Map.get(package_entry, "packageItemContainer", []))
 
-      {release_form, package_qty} =
+      {release_form, dose_form_id, package_qty} =
         case items do
           [item | _] ->
             form = get_v(item, ["manufacturedDoseForm", "term_name"])
+            id = get_v(item, ["manufacturedDoseForm", "id"])
             qty_val = get_v(item, ["count", "value"])
             qty_unit = get_v(item, ["count", "unit"])
-            {form, "#{qty_val} #{qty_unit}"}
+            {form, id, "#{qty_val} #{qty_unit}"}
 
           [] ->
-            {"", ""}
+            {"", "", ""}
         end
 
       manufacturers = Map.get(package_entry, "manufacturers", [])
@@ -71,7 +72,7 @@ defmodule Medipro do
 
       "#{fix(mpid)},#{fix(pmsid)},#{fix(inn_ua)},#{fix(inn_en)},#{fix(atc_code)},#{fix(reg_num)},#{fix(exp_date)}," <>
         "#{fix(lang)},#{fix(name)},#{fix(pcid)},#{fix(status)},#{fix(desc)},#{fix(legal)}," <>
-        "#{fix(release_form)},#{fix(release_form)},#{fix(manufacturer)},#{fix(package_qty)}\n"
+        "#{fix(release_form)},#{fix(dose_form_id)},#{fix(manufacturer)},#{fix(package_qty)}\n"
     end
   end
 
